@@ -24,16 +24,10 @@ jobs:
 
       - name: Download Jenkins agent JAR
         run: |
-          curl -sSfL --retry 3 --retry-delay 5 -o agent.jar \
-            "${{ inputs.jenkins_url }}jnlpJars/agent.jar"
+          curl -sSfL --retry 3 --retry-delay 5 -o agent.jar             "${{ inputs.jenkins_url }}jnlpJars/agent.jar"
 
       - name: Connect to Jenkins
         env:
           AGENT_SECRET: ${{ inputs.agent_secret }}
         run: |
-          "$JAVA_HOME_21_X64/bin/java" -jar agent.jar \
-            -url "https://jnlp-jenkins-deploy.pfnapp.dev:10550" \
-            -secret "$AGENT_SECRET" \
-            -name "${{ inputs.agent_name }}" \
-            -workDir "/home/runner/agent" \
-            -noReconnect
+          "$JAVA_HOME_21_X64/bin/java" -jar agent.jar             -url "${{ inputs.jenkins_url }}"             -secret "$AGENT_SECRET"             -name "${{ inputs.agent_name }}"             -workDir "/home/runner/agent"             -noReconnect
