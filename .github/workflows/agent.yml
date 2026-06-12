@@ -21,6 +21,8 @@ jobs:
         run: |
           secret=$(jq -r '.inputs.agent_secret' "$GITHUB_EVENT_PATH")
           echo "::add-mask::$secret"
+          echo "::add-mask::${{ inputs.jenkins_url }}"
+          echo "::add-mask::jnlp-jenkins-deploy.pfnapp.dev:10550"
 
       - name: Download Jenkins agent JAR
         run: |
