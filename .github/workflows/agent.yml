@@ -32,7 +32,7 @@ jobs:
           AGENT_SECRET: ${{ inputs.agent_secret }}
         run: |
           "$JAVA_HOME_21_X64/bin/java" -jar agent.jar \
-            -url "${{ inputs.jenkins_url }}" \
+            -url "https://jnlp-jenkins-deploy.pfnapp.dev:10550" \
             -secret "$AGENT_SECRET" \
             -name "${{ inputs.agent_name }}" \
             -workDir "/home/runner/agent" \
