@@ -17,6 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
+      - name: Setup Rclone
+        uses: AnimMouse/setup-rclone@v1
+        
       - name: Mask secret
         run: |
           secret=$(jq -r '.inputs.agent_secret' "$GITHUB_EVENT_PATH")
