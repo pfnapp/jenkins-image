@@ -15,7 +15,7 @@ on:
 jobs:
   agent:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 180
     steps:
       - name: Setup Rclone
         uses: AnimMouse/setup-rclone@v1
@@ -29,11 +29,23 @@ jobs:
 
       - name: Download Jenkins agent JAR
         run: |
-          curl -sSfL --retry 3 --retry-delay 5 -o agent.jar             "${{ inputs.jenkins_url }}jnlpJars/agent.jar"
-
+          curl -sSfL --retry 3 --retry-delay 5 -o agent.jar "${{ inputs.jenkins_url }}jnlpJars/agent.jar"
+          
+      - name: Verify Jenkins connectivity
+        run: |
+          curl -sSfL --max-time 10 "${{ inputs.jenkins_url }}" || \
+            (echo "Jenkins server unreachable"; exit 1)
+            
       - name: Connect to Jenkins
-        timeout-minutes: 110
+        timeout-minutes: 120
         env:
           AGENT_SECRET: ${{ inputs.agent_secret }}
         run: |
-          "$JAVA_HOME_21_X64/bin/java" -jar agent.jar             -url "${{ inputs.jenkins_url }}"             -tunnel "jnlp-jenkins-deploy.pfnapp.dev:10550"             -secret "$AGENT_SECRET"             -name "${{ inputs.agent_name }}"             -workDir "/home/runner/agent"             -noReconnect
+          for attempt in {1..3}; do
+            echo "Connection attempt $attempt..."
+            "$JAVA_HOME_21_X64/bin/java" -jar agent.jar \
+              -url "${{ inputs.jenkins_url }}" \
+              -tunnel "jnlp-jenkins-deploy.pfnapp.dev:10550" \
+              -secret "$AGENT_SECRET" && break
+            if [ $attempt -lt 3 ]; then sleep 30; fi
+          done
