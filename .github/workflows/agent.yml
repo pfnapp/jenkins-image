@@ -33,7 +33,7 @@ jobs:
           
       - name: Verify Jenkins connectivity
         run: |
-          curl -sSfL --max-time 10 "${{ inputs.jenkins_url }}" || \
+          curl -sSfL --max-time 10  "${{ inputs.jenkins_url }}jnlpJars/agent.jar" || \
             (echo "Jenkins server unreachable"; exit 1)
             
       - name: Connect to Jenkins
