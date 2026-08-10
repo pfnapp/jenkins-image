@@ -41,4 +41,5 @@ jobs:
             -tunnel "jnlp-jenkins-deploy.pfnapp.dev:10550" \
             -secret "$AGENT_SECRET" \
             -name "${{ inputs.agent_name }}" \
-            -workDir "/home/runner/agent"
+            -workDir "/home/runner/agent" \
+            -noReconnectAfter 10m
