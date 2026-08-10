@@ -15,7 +15,7 @@ on:
 jobs:
   agent:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 120
     steps:
       - name: Setup Rclone
         uses: AnimMouse/setup-rclone@v1
@@ -32,6 +32,7 @@ jobs:
           curl -sSfL --retry 3 --retry-delay 5 -o agent.jar             "${{ inputs.jenkins_url }}jnlpJars/agent.jar"
 
       - name: Connect to Jenkins
+        timeout-minutes: 110
         env:
           AGENT_SECRET: ${{ inputs.agent_secret }}
         run: |
